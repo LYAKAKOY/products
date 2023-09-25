@@ -1,5 +1,6 @@
 from fastapi import HTTPException
 from pydantic import BaseModel, field_validator
+from db.tasks import get_all_keys
 
 
 class TunedModel(BaseModel):
@@ -10,15 +11,26 @@ class TunedModel(BaseModel):
 
 
 class ShowProduct(TunedModel):
+    code: str
     name: str
     price: float
     quantity: int
 
 
 class Product(BaseModel):
+    code: str
     name: str
     price: float
     quantity: int
+
+    @field_validator('code')
+    @classmethod
+    def check_code(cls, value):
+        if value in get_all_keys():
+            raise HTTPException(
+                status_code=400, detail="Такой код товара уже существует"
+            )
+        return value
 
     @field_validator('price')
     @classmethod
