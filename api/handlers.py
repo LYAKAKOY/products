@@ -23,3 +23,10 @@ async def get_products(db: aioredis.Redis = Depends(get_db)) -> List[ShowProduct
 @product_router.post('/products')
 async def create_products(item: Product, db: aioredis.Redis = Depends(get_db)) -> bool:
     return await db.set(item.code, item.model_dump_json())
+
+
+@product_router.get('/product')
+async def get_product_by_code(code: str, db: aioredis.Redis = Depends(get_db)) -> ShowProduct:
+    item = await db.get(code)
+    json_data = json.loads(item)
+    return ShowProduct(**json_data)
