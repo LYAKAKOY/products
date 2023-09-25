@@ -1,5 +1,4 @@
 import json
-import uuid
 from typing import List
 from redis import asyncio as aioredis
 from fastapi import APIRouter, Depends
@@ -30,3 +29,8 @@ async def get_product_by_code(code: str, db: aioredis.Redis = Depends(get_db)) -
     item = await db.get(code)
     json_data = json.loads(item)
     return ShowProduct(**json_data)
+
+
+@product_router.delete('/product')
+async def delete_product_by_id(code: str, db: aioredis.Redis = Depends(get_db)) -> bool:
+    return await db.delete(code)
