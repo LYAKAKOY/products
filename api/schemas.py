@@ -10,14 +10,14 @@ class TunedModel(BaseModel):
         from_attributes = True
 
 
-class ShowProduct(TunedModel):
+class Product(TunedModel):
     code: str
     name: str
     price: float
     quantity: int
 
 
-class Product(BaseModel):
+class CreateProduct(BaseModel):
     code: str
     name: str
     price: float
@@ -49,3 +49,7 @@ class Product(BaseModel):
                 status_code=400, detail="Количество товара должно быть больше нуля"
             )
         return value
+
+
+class DeleteProductResponse(BaseModel):
+    code: str
